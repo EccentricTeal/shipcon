@@ -1,9 +1,0 @@
-float32 ang_roll
-float32 ang_pitch
-float32 ang_yaw
-float32 vel_roll
-float32 vel_pitch
-float32 vel_yaw
-float32 acc_surge
-float32 acc_sway
-float32 acc_heave
