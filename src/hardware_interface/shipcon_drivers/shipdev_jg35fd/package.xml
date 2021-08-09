@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>shipdev_jg35fd</name>
+  <version>1.0.0</version>
+  <description>Hardware Driver for ROS2 of JAE fiber optic gyro JG-35FD</description>
+  <maintainer email="suisei_wada@naoe.eng.osaka-u.ac.jp">Suisei WADA</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

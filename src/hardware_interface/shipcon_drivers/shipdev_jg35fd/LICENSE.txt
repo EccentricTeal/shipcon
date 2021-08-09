@@ -1,0 +1,10 @@
+-NOTICE-
+All data has not been license free yet.
+The data in this repository cannot be used by anyone without permission of the developer.
+It is not permenent decision, but this developer(s) has not made sufficient discussion about the license.
+After discussing and when we decide license style, we will change this license file.
+
+
+Suisei WADA
+The developper of Shipcon & Shipcon2
+Osaka University
