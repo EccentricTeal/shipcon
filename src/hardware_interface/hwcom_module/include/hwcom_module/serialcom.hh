@@ -33,7 +33,7 @@ namespace shipcon::hwcom
     public:
       void setBaudRate( unsigned int baudrate );
       void send( std::string& senddata );
-      void recv( std::string& recvodata );
+      void recv_until( std::string& recvdata, std::string match_expression, int timeout );
 
     /* Class member functions */
     private:

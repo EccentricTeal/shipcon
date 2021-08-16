@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(shipdev_jg35fd)
+project(shipcon_drivers)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)

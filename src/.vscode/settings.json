@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "thread": "cpp"
+  },
+  "python.autoComplete.extraPaths": [
+    "/media/suisei/data/projects/shipcon2/ros/install/shipcon_msgs/lib/python3.8/site-packages",
+    "/home/suisei/windata/projects/shipcon2/ros/install/shipcon_msgs/lib/python3.8/site-packages",
+    "/opt/ros/foxy/lib/python3.8/site-packages"
+  ]
+}

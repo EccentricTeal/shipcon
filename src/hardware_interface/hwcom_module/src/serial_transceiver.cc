@@ -32,38 +32,41 @@ namespace shipcon::hwcom
     boost::asio::write( serial_socket_, boost::asio::buffer( senddata ) );
   }
 
-  void SerialTransceiver::recv( std::string& recvdata )
+  void SerialTransceiver::recv_until( std::string& recvdata, std::string match_expression, int timeout )
   {
-    //Blocking
+    //Non Blocking
+    bool isTimeouted = false;
+    boost::asio::streambuf buffer;
+    boost::asio::deadline_timer timer( io_context );
+    timer.expires_from_now( boost::posix_time::seconds( timeout ) );
     
-
-    boost::asio::spawn(
-      serial_socket_,
-      [this]( boost::asio::yield_context yield )
+    timer.async_wait(
+      [this, &isTimeouted]( const boost::system::error_code& error_code )
       {
-        boost::asio::streambuf buffer;
-        boost::system::error_code error_code;
-        
-        const size_t recvsize = boost::asio::async_read( 
-        serial_socket_,
-        buffer,
-        boost::asio::transfer_at_least(1),
-        yield[error_code]
-      );
+        if( error_code == boost::asio::error::operation_aborted )
+        {
+          //Timer Canceled
+          ;
+        }
+        else
+        {
+          //Timer out
+          serial_socket_.cancel();
+          isTimeouted = true;
+        }
       }
-    )
+    );
 
-    while( !error_code )
-    {
-      
-      
-
-    }
-    
-    
-    
-
-    recvdata = "";
+    //Receive data
+    boost::asio::async_read_until(
+      serial_socket_,
+      buffer,
+      match_expression,
+      [&timer]( const boost::system::error_code& error_code )
+      {
+        timer.cancel();
+      }
+    );
 
   }
 
