@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<robot name="esso_osaka">
+  <link name="base_link">
+    <visual>
+      <geometry>
+		<mesh filename="package://shipcon/meshes/esso_osaka.dae"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
