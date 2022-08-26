@@ -3,14 +3,18 @@
 
 namespace shipcon
 {
-  MotorNode::MotorNode( std::string ip, int port ):
-  MOTOR_IP( ip ),
-  MOTOR_PORT( port )
+  MotorNode::MotorNode( ros::NodeHandle nh, ros::NodeHandle pnh ):
+  nh_( nh ),
+  pnh_( pnh )
   {
+    pnh_.getParam( "IpAddr", ip_addr_ );
+    pnh_.getParam( "Port", port_ );
+    pnh_.param<std::string>( "SubnameControlval", subname_ctrlval_, "controlval_motor" );
     initEthernet();
-    pub_status_ = nh_.advertise<shipcon::motor_info>("motor1_info", 1);
-    pub_error_ = nh_.advertise<diagnostic_msgs::DiagnosticStatus>("motor1_error", 1);
-    sub_ctrl_ = nh_.subscribe("auto_motor1", 1, &MotorNode::subcallback_ctrl_value, this);
+
+    pub_status_ = pnh_.advertise<shipcon::motor_info>( "status", 1 );
+    pub_error_ = pnh_.advertise<diagnostic_msgs::DiagnosticStatus>( "diag_info", 1 );
+    sub_ctrlval_ = nh_.subscribe( subname_ctrlval_, 1, &MotorNode::subcallback_ctrl_value, this );
     msg_error_.name = "Motor_info_error";
     ctrl_value_msg_.data = 0;
   }
@@ -32,20 +36,20 @@ namespace shipcon
 
   void MotorNode::initEthernet( void )
   {
-    sock_ = socket(AF_INET, SOCK_DGRAM, 0);
+    sock_ = socket( AF_INET, SOCK_DGRAM, 0 );
     addr_.sin_family = AF_INET;
-    addr_.sin_port = htons(50001);
+    addr_.sin_port = htons( 50001 );
     addr_.sin_addr.s_addr = INADDR_ANY;
-    bind(sock_, (struct sockaddr *)&addr_, sizeof(addr_));
+    bind( sock_, (struct sockaddr *)&addr_, sizeof(addr_) );
   }
 
 
   int MotorNode::receiveUdp( std::string ip, char* data, const int data_length )
   {
     /*Declare and Initialize Local Variables*/
-    memset(data, '\0', data_length);
+    memset( data, '\0', data_length );
     struct sockaddr_in addr_src;
-    int addr_src_len = sizeof(sockaddr_in);
+    int addr_src_len = sizeof( sockaddr_in );
     std::string recv_ip_addr;
     int recv_size = 0;
     
@@ -54,7 +58,7 @@ namespace shipcon
     if( recv_size == -1 ){ return -1; }
 
     /*Evaluate Source IP*/
-	  recv_ip_addr = inet_ntoa(addr_src.sin_addr);
+	  recv_ip_addr = inet_ntoa( addr_src.sin_addr );
 
     if( recv_ip_addr == ip )
     {
@@ -62,7 +66,7 @@ namespace shipcon
     }
     else
     {
-      memset(data, 0, sizeof(data));
+      memset( data, 0, sizeof(data) );
       return 0;
     }
   }
@@ -84,10 +88,10 @@ namespace shipcon
   void MotorNode::subcallback_ctrl_value( const std_msgs::Int16 value )
   {
     char buffer[4];
-    memset(buffer, '\0', sizeof(buffer));
-    memcpy(buffer, &value, sizeof(buffer));
+    memset( buffer, '\0', sizeof(buffer) );
+    memcpy( buffer, &value, sizeof(buffer) );
 
-    int send_size = sendUdp( MOTOR_PORT, MOTOR_IP, buffer, sizeof(buffer) );
+    int send_size = sendUdp( port_, ip_addr_, buffer, sizeof(buffer) );
 
     std::lock_guard<std::mutex> lock( mtx_ );
     ROS_INFO("Sent:%d Byte", send_size);
@@ -96,7 +100,7 @@ namespace shipcon
 
   void MotorNode::thread_publishMotorInfo( void )
   {
-	  ros::Rate loop_rate(10);
+	  ros::Rate loop_rate( 10 );
 
     while( ros::ok() )
     {
@@ -118,7 +122,7 @@ namespace shipcon
 	
     while( ros::ok() )
     {
-      if( receiveUdp( MOTOR_IP, buffer, sizeof(buffer) ) > 0 )
+      if( receiveUdp( ip_addr_, buffer, sizeof(buffer) ) > 0 )
       {
         std::lock_guard<std::mutex> lock( mtx_ );
         msg_error_.level = msg_error_.OK;
@@ -137,7 +141,7 @@ namespace shipcon
         msg_status_.temperature = 0.0;
       }
     }
-
+    
   }
 
 

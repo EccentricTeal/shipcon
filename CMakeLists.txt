@@ -65,13 +65,16 @@ target_link_libraries(rc_controller ${catkin_LIBRARIES})
 add_dependencies(rc_controller shipcon_generate_messages_cpp)
 
 add_executable(motor
-  src/motor.cpp
+  src/motor.cc
   src/motor_node.cc
 )
 target_link_libraries(motor ${catkin_LIBRARIES})
 add_dependencies(motor shipcon_generate_messages_cpp)
 
-add_executable(rudder src/rudder.cpp)
+add_executable(rudder
+  src/rudder.cc
+  src/rudder_node.cc
+)
 target_link_libraries(rudder ${catkin_LIBRARIES})
 add_dependencies(rudder shipcon_generate_messages_cpp)
 

@@ -1,10 +1,10 @@
-#ifndef SHIPCON__MOTOR__HH
-#define SHIPCON__MOTOR__HH
+#ifndef SHIPCON__RUDDER__HH
+#define SHIPCON__RUDDER__HH
 
 #include "ros/ros.h"
 #include "std_msgs/Int16.h"
+#include "std_msgs/Float32.h"
 #include "diagnostic_msgs/DiagnosticStatus.h"
-#include "shipcon/motor_info.h"
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -17,7 +17,7 @@
 
 namespace shipcon
 {
-  class MotorNode
+  class RudderNode
   {
     /** Constants **/
     private:
@@ -39,9 +39,10 @@ namespace shipcon
       ros::Publisher pub_error_;
       ros::Subscriber sub_ctrlval_;
       std::string subname_ctrlval_;
-      shipcon::motor_info msg_status_;
+
       diagnostic_msgs::DiagnosticStatus msg_error_;
       std_msgs::Int16 ctrl_value_msg_;
+      std_msgs::Float32 angle_msg_;
 
       //Thread
       std::unique_ptr<std::thread> threadptr_pub_;
@@ -49,8 +50,8 @@ namespace shipcon
 
     /** Constrctor, Destructor **/
     public:
-      MotorNode( ros::NodeHandle nh, ros::NodeHandle pnh );
-      ~MotorNode();
+      RudderNode( ros::NodeHandle nh, ros::NodeHandle pnh );
+      ~RudderNode();
 
     /** Methods **/
     public:
@@ -67,7 +68,7 @@ namespace shipcon
 
     /** Thread **/
     private:
-      void thread_publishMotorInfo( void );
+      void thread_publishRudderInfo( void );
       void thread_updateValue( void );
   };
 }

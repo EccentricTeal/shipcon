@@ -3,7 +3,10 @@
 int main( int argc, char *argv[] )
 {
   ros::init(argc, argv, "NODE_Motor1" );
-  shipcon::MotorNode motor( "192.168.39.10", 50000 );
+  ros::NodeHandle nh;
+  ros::NodeHandle pnh("~");
+  shipcon::MotorNode motor( nh, pnh );
+  
   motor.run();
   ros::spin();
   
