@@ -140,8 +140,7 @@ namespace shipcon
         msg_status_.current = 0.0;
         msg_status_.temperature = 0.0;
       }
-    }
-    
+    } 
   }
 
 

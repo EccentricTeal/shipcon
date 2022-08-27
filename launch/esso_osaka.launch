@@ -1,0 +1,26 @@
+<launch>
+  <group ns="esso_osaka">
+
+	<node pkg="shipcon" name="main_motor" type="motor">
+		<param name="IpAddr" value="192.168.39.10" />
+		<param name="Port" value="50000" />
+		<param name="SubNameControlval" value="/Autonode/Subname/Motor" />
+	</node>
+
+	<node pkg="shipcon" name="rudder" type="rudder">
+		<param name="IpAddr" value="192.168.39.11" />
+		<param name="Port" value="50000" />
+		<param name="SubNameControlval" value="/Autonode/Subname/Rudder" />
+	</node>
+
+	<node pkg="shipcon" name="radio_control" type="radio_control">
+		<param name="IpAddr" value="192.168.39.100" />
+		<param name="Port" value="50000" />
+		<param name="SubNameControlval" value="/Autonode/Subname/RadioControl" />
+	</node>
+
+	<node pkg="shipcon" name="gps" type="gps_pub.py" />
+	<node pkg="shipcon" name="gyro" type="gyro" />
+	
+  </group>
+</launch>

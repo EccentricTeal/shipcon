@@ -52,39 +52,60 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(gyro src/gyro.cpp)
+
+add_executable(motor
+  src/class/motor.cc
+  src/node/motor_node.cc
+)
+target_link_libraries(motor ${catkin_LIBRARIES})
+add_dependencies(motor shipcon_generate_messages_cpp)
+
+
+add_executable(servo
+  src/class/servo.cc
+  src/node/servo_node.cc
+)
+target_link_libraries(servo ${catkin_LIBRARIES})
+add_dependencies(servo shipcon_generate_messages_cpp)
+
+
+add_executable(rudder
+  src/class/rudder.cc
+  src/node/rudder_node.cc
+)
+target_link_libraries(rudder ${catkin_LIBRARIES})
+add_dependencies(rudder shipcon_generate_messages_cpp)
+
+
+add_executable(radio_control
+  src/class/radio_control.cc
+  src/node/radio_control_node.cc
+)
+target_link_libraries(radio_control ${catkin_LIBRARIES})
+add_dependencies(radio_control shipcon_generate_messages_cpp)
+
+
+add_executable(gyro
+  src/node/gyro_node.cpp
+)
 target_link_libraries(gyro ${catkin_LIBRARIES})
 add_dependencies(gyro shipcon_generate_messages_cpp)
+
 
 add_executable(gps_csv_converter src/gps_csv_converter.cpp)
 target_link_libraries(gps_csv_converter ${catkin_LIBRARIES})
 add_dependencies(gps_csv_converter shipcon_generate_messages_cpp)
 
-add_executable(rc_controller src/rc_controller.cpp)
-target_link_libraries(rc_controller ${catkin_LIBRARIES})
-add_dependencies(rc_controller shipcon_generate_messages_cpp)
-
-add_executable(motor
-  src/motor.cc
-  src/motor_node.cc
-)
-target_link_libraries(motor ${catkin_LIBRARIES})
-add_dependencies(motor shipcon_generate_messages_cpp)
-
-add_executable(rudder
-  src/rudder.cc
-  src/rudder_node.cc
-)
-target_link_libraries(rudder ${catkin_LIBRARIES})
-add_dependencies(rudder shipcon_generate_messages_cpp)
 
 add_executable(main_control src/main_control.cpp)
 target_link_libraries(main_control ${catkin_LIBRARIES})
 add_dependencies(main_control shipcon_generate_messages_cpp)
 
+
 add_executable(logger src/logger.cpp)
 target_link_libraries(logger ${catkin_LIBRARIES})
 add_dependencies(logger shipcon_generate_messages_cpp)
+
 
 #############
 ## Install ##
