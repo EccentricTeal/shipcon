@@ -2,8 +2,8 @@
 #define SHIPCON__MOTOR__HH
 
 #include "ros/ros.h"
-#include "std_msgs/Int16.h"
 #include "diagnostic_msgs/DiagnosticStatus.h"
+#include "shipcon/motor_control.h"
 #include "shipcon/motor_info.h"
 
 #include <sys/socket.h>
@@ -21,6 +21,9 @@ namespace shipcon
   {
     /** Constants **/
     private:
+      const double MAX_MOTOR_RPM = 2000.0;
+      const double MAX_PITCH_DEG = 20.0;
+      const int SELF_PORT = 50000;
       
     /** Member Objects **/
     private:
@@ -35,13 +38,10 @@ namespace shipcon
 
       //ROS
       ros::NodeHandle nh_, pnh_;
-      ros::Publisher pub_status_; 
-      ros::Publisher pub_error_;
+      ros::Publisher pub_motor_info_;
       ros::Subscriber sub_ctrlval_;
       std::string subname_ctrlval_;
       shipcon::motor_info msg_status_;
-      diagnostic_msgs::DiagnosticStatus msg_error_;
-      std_msgs::Int16 ctrl_value_msg_;
 
       //Thread
       std::unique_ptr<std::thread> threadptr_pub_;
@@ -63,12 +63,16 @@ namespace shipcon
 
     /** Callback **/
     private:
-      void subcallback_ctrl_value( const std_msgs::Int16 value );
+      void subcallback_ctrl_value( shipcon::motor_control::ConstPtr msg );
 
     /** Thread **/
     private:
       void thread_publishMotorInfo( void );
       void thread_updateValue( void );
+
+    /** Math calc **/
+    double deg2rad( double deg ){ return ( deg * M_PI ) / 180.0; }
+    double rad2deg( double rad ){ return ( rad * 180.0 ) / M_PI; }
   };
 }
 

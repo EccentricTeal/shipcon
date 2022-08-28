@@ -1,0 +1,2 @@
+float64 target_rpm
+float64 target_pitch_rad

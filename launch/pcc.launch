@@ -3,25 +3,19 @@
 
 	<node pkg="shipcon" name="main_motor" type="motor">
 		<param name="IpAddr" value="192.168.39.10" />
-		<param name="Port" value="50000" />
+		<param name="Port" value="50001" />
 		<param name="SubNameControlval" value="/Autonode/Subname/Motor" />
 	</node>
 
-	<node pkg="shipcon" name="bow_thruster" type="motor">
-		<param name="IpAddr" value="192.168.39.12" />
-		<param name="Port" value="50000" />
-		<param name="SubNameControlval" value="/Autonode/Subname/BowThruster" />
-	</node>
-
-	<node pkg="shipcon" name="propeller_pitch" type="servo">
+	<node pkg="shipcon" name="bow_thruster" type="bowthruster" output="screen">
 		<param name="IpAddr" value="192.168.39.13" />
-		<param name="Port" value="50000" />
-		<param name="SubNameControlval" value="/Autonode/Subname/PropellerPitch" />
+		<param name="Port" value="50003" />
+		<param name="SubNameControlval" value="/Autonode/Subname/BowThruster" />
 	</node>
 
 	<node pkg="shipcon" name="rudder" type="rudder">
 		<param name="IpAddr" value="192.168.39.11" />
-		<param name="Port" value="50000" />
+		<param name="Port" value="50002" />
 		<param name="SubNameControlval" value="/Autonode/Subname/Rudder" />
 	</node>
 

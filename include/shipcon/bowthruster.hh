@@ -1,10 +1,9 @@
-#ifndef SHIPCON__SERVO__HH
-#define SHIPCON__SERVO__HH
+#ifndef SHIPCON__BOWTHRUSTER__HH
+#define SHIPCON__BOWTHRUSTER__HH
 
 #include "ros/ros.h"
-#include "std_msgs/Float32.h"
-#include "diagnostic_msgs/DiagnosticStatus.h"
-#include "shipcon/motor_info.h"
+#include "shipcon/bowthruster_control.h"
+#include "shipcon/bowthruster_info.h"
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -17,11 +16,13 @@
 
 namespace shipcon
 {
-  class ServoNode
+  class BowThrusterNode
   {
     /** Constants **/
     private:
-      
+      const double MAX_BOWTHRUSTER_RPM = 3000.0;
+      const int SELF_PORT = 50000;
+
     /** Member Objects **/
     private:
       //Thread
@@ -35,13 +36,11 @@ namespace shipcon
 
       //ROS
       ros::NodeHandle nh_, pnh_;
-      ros::Publisher pub_angle_;
-      ros::Publisher pub_error_;
+      ros::Publisher pub_info_;
       ros::Subscriber sub_ctrlval_;
       std::string subname_ctrlval_;
-      std_msgs::Float32 msg_angle_;
-      diagnostic_msgs::DiagnosticStatus msg_error_;
-      std_msgs::Float32 ctrl_value_msg_;
+      shipcon::bowthruster_info msg_info_;
+      shipcon::bowthruster_control msg_ctrl_value_;
 
       //Thread
       std::unique_ptr<std::thread> threadptr_pub_;
@@ -49,8 +48,8 @@ namespace shipcon
 
     /** Constrctor, Destructor **/
     public:
-      ServoNode( ros::NodeHandle nh, ros::NodeHandle pnh );
-      ~ServoNode();
+      BowThrusterNode( ros::NodeHandle nh, ros::NodeHandle pnh );
+      ~BowThrusterNode();
 
     /** Methods **/
     public:
@@ -63,12 +62,12 @@ namespace shipcon
 
     /** Callback **/
     private:
-      void subcallback_ctrl_value( const std_msgs::Float32 value );
+      void subcallback_ctrl_value( shipcon::bowthruster_control::ConstPtr msg );
 
     /** Thread **/
     private:
-      void thread_publishServoInfo( void );
-      void thread_updateValue( void );
+      void thread_publishBowThrusterInfo( void );
+      void thread_updateBowThrusterInfo( void );
   };
 }
 

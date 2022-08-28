@@ -24,7 +24,11 @@ catkin_python_setup()
    actuators.msg
    error.msg
    mode.msg
+
    motor_info.msg
+   motor_control.msg
+   bowthruster_info.msg
+   bowthruster_control.msg
 )
  generate_messages(
    DEPENDENCIES
@@ -61,12 +65,12 @@ target_link_libraries(motor ${catkin_LIBRARIES})
 add_dependencies(motor shipcon_generate_messages_cpp)
 
 
-add_executable(servo
-  src/class/servo.cc
-  src/node/servo_node.cc
+add_executable(bowthruster
+  src/class/bowthruster.cc
+  src/node/bowthruster_node.cc
 )
-target_link_libraries(servo ${catkin_LIBRARIES})
-add_dependencies(servo shipcon_generate_messages_cpp)
+target_link_libraries(bowthruster ${catkin_LIBRARIES})
+add_dependencies(bowthruster shipcon_generate_messages_cpp)
 
 
 add_executable(rudder
