@@ -7,7 +7,7 @@
 		<param name="SubNameControlval" value="/Autonode/Subname/Motor" />
 	</node>
 
-	<node pkg="shipcon" name="rudder" type="rudder">
+	<node pkg="shipcon" name="rudder" type="single_rudder">
 		<param name="IpAddr" value="192.168.39.11" />
 		<param name="Port" value="50000" />
 		<param name="SubNameControlval" value="/Autonode/Subname/Rudder" />

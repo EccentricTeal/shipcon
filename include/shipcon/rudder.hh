@@ -17,7 +17,7 @@
 
 namespace shipcon
 {
-  class RudderNode
+  class SingleRudderNode
   {
     /** Constants **/
     private:
@@ -50,8 +50,8 @@ namespace shipcon
 
     /** Constrctor, Destructor **/
     public:
-      RudderNode( ros::NodeHandle nh, ros::NodeHandle pnh );
-      ~RudderNode();
+      SingleRudderNode( ros::NodeHandle nh, ros::NodeHandle pnh );
+      ~SingleRudderNode();
 
     /** Methods **/
     public:

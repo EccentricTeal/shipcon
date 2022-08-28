@@ -1,0 +1,3 @@
+int16 mode
+int16 MODE_SYNC = 0
+int16 MODE_SEPARATE = 1

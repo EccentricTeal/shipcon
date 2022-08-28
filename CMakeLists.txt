@@ -29,6 +29,9 @@ catkin_python_setup()
    motor_control.msg
    bowthruster_info.msg
    bowthruster_control.msg
+   rudder_control.msg
+   rudder_info.msg
+   rudder_vectwin_mode.msg
 )
  generate_messages(
    DEPENDENCIES
@@ -73,12 +76,12 @@ target_link_libraries(bowthruster ${catkin_LIBRARIES})
 add_dependencies(bowthruster shipcon_generate_messages_cpp)
 
 
-add_executable(rudder
-  src/class/rudder.cc
-  src/node/rudder_node.cc
+add_executable(single_rudder
+  src/class/single_rudder.cc
+  src/node/single_rudder_node.cc
 )
-target_link_libraries(rudder ${catkin_LIBRARIES})
-add_dependencies(rudder shipcon_generate_messages_cpp)
+target_link_libraries(single_rudder ${catkin_LIBRARIES})
+add_dependencies(single_rudder shipcon_generate_messages_cpp)
 
 
 add_executable(radio_control

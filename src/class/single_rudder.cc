@@ -3,7 +3,7 @@
 
 namespace shipcon
 {
-  RudderNode::RudderNode( ros::NodeHandle nh, ros::NodeHandle pnh ):
+  SingleRudderNode::SingleRudderNode( ros::NodeHandle nh, ros::NodeHandle pnh ):
   nh_( nh ),
   pnh_( pnh )
   {
@@ -13,28 +13,28 @@ namespace shipcon
     initEthernet();
     pub_status_ = pnh_.advertise<std_msgs::Float32>( "status", 1 );
     pub_error_ = nh_.advertise<diagnostic_msgs::DiagnosticStatus>( "diag_info", 1 );
-    sub_ctrlval_ = nh_.subscribe( subname_ctrlval_, 1, &RudderNode::subcallback_ctrl_value, this );
+    sub_ctrlval_ = nh_.subscribe( subname_ctrlval_, 1, &SingleRudderNode::subcallback_ctrl_value, this );
 
     msg_error_.name = pnh_.getNamespace();
     ctrl_value_msg_.data = 0;
   }
 
   
-  RudderNode::~RudderNode()
+  SingleRudderNode::~SingleRudderNode()
   {
     if( threadptr_pub_->joinable() ){ threadptr_pub_->join(); }
     if( threadptr_update_->joinable() ){ threadptr_update_->join(); }
   }
 
 
-  void RudderNode::run( void )
+  void SingleRudderNode::run( void )
   {
-    threadptr_pub_ = std::make_unique<std::thread>( &RudderNode::thread_publishRudderInfo, this );
-    threadptr_update_ = std::make_unique<std::thread>( &RudderNode::thread_updateValue, this );
+    threadptr_pub_ = std::make_unique<std::thread>( &SingleRudderNode::thread_publishRudderInfo, this );
+    threadptr_update_ = std::make_unique<std::thread>( &SingleRudderNode::thread_updateValue, this );
   }
 
 
-  void RudderNode::initEthernet( void )
+  void SingleRudderNode::initEthernet( void )
   {
     sock_ = socket( AF_INET, SOCK_DGRAM, 0 );
     addr_.sin_family = AF_INET;
@@ -44,7 +44,7 @@ namespace shipcon
   }
 
 
-  int RudderNode::receiveUdp( std::string ip, char* data, const int data_length )
+  int SingleRudderNode::receiveUdp( std::string ip, char* data, const int data_length )
   {
     /*Declare and Initialize Local Variables*/
     memset( data, '\0', data_length );
@@ -71,7 +71,7 @@ namespace shipcon
   }
 
 
-  int RudderNode::sendUdp( int port, std::string ip, char* data, const int data_length )
+  int SingleRudderNode::sendUdp( int port, std::string ip, char* data, const int data_length )
   {
     struct sockaddr_in addr_dest;
 
@@ -83,7 +83,7 @@ namespace shipcon
   }
 
 
-  void RudderNode::subcallback_ctrl_value( const std_msgs::Int16 value )
+  void SingleRudderNode::subcallback_ctrl_value( const std_msgs::Int16 value )
   {
     char buffer[4];
     int send_size;
@@ -96,7 +96,7 @@ namespace shipcon
   }
 
 
-  void RudderNode::thread_publishRudderInfo( void )
+  void SingleRudderNode::thread_publishRudderInfo( void )
   {
 	  char buffer[8];
 	
@@ -120,7 +120,7 @@ namespace shipcon
   }
 
 
-  void RudderNode::thread_updateValue( void )
+  void SingleRudderNode::thread_updateValue( void )
   {
 	  ros::Rate loop_rate( 10 );
 
