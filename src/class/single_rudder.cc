@@ -9,7 +9,7 @@ namespace shipcon
   {
     pnh_.getParam( "IpAddr", ip_addr_ );
     pnh_.getParam( "Port", port_ );
-    pnh_.param<std::string>( "SubnameControlVal", subname_ctrlval_, "controlval_rudder");
+    pnh_.param<std::string>( "SubnameControlVal", subname_ctrlval_, "controlval_rudder" );
     initEthernet();
     pub_status_ = pnh_.advertise<std_msgs::Float32>( "status", 1 );
     pub_error_ = nh_.advertise<diagnostic_msgs::DiagnosticStatus>( "diag_info", 1 );
@@ -83,14 +83,17 @@ namespace shipcon
   }
 
 
-  void SingleRudderNode::subcallback_ctrl_value( const std_msgs::Int16 value )
+  void SingleRudderNode::subcallback_ctrl_value( std_msgs::Int16::ConstPtr value )
   {
-    char buffer[4];
-    int send_size;
+    int rudder_angle_percent = value->data;
+    if( rudder_angle_percent > 10000 ){ rudder_angle_percent = 10000; }
+    if( rudder_angle_percent < -10000 ){ rudder_angle_percent = -10000; }
 
-    memset(buffer, 0, sizeof(buffer));
-    memcpy(buffer, &value, sizeof(&value));
-    send_size = sendUdp( port_, ip_addr_.c_str(), buffer, sizeof(buffer) );
+    char buffer[4];
+    memset( buffer, 0, sizeof(buffer) );
+    memcpy( buffer, &rudder_angle_percent, 2 );
+
+    int send_size = sendUdp( port_, ip_addr_.c_str(), buffer, sizeof(buffer) );
     std::lock_guard<std::mutex> lock( mtx_ );
     ROS_INFO("Sent:%d Byte", send_size);
   }

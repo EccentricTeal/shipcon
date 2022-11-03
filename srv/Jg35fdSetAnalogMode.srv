@@ -1,0 +1,21 @@
+uint8 analog_mode
+uint8 ANALOG_MODE_YAW = 49 #0x31
+uint8 ANALOG_MODE_YAWRATE = 48 #0x30
+
+uint8 yaw_range
+uint8 YAW_RANGE_10DEG = 49 #0x31
+uint8 YAW_RANGE_20DEG = 50 #0x32
+uint8 YAW_RANGE_45DEG = 51 #0x33
+uint8 YAW_RANGE_90DEG = 52 #0x34
+uint8 YAW_RANGE_180DEG = 53 #0x35
+
+uint8 yawrate_range
+uint8 YAWRATE_RANGE_10DEG = 49 #0x31
+uint8 YAWRATE_RANGE_20DEG = 50 #0x32
+uint8 YAWRATE_RANGE_50DEG = 51 #0x33
+uint8 YAWRATE_RANGE_100DEG = 52 #0x34
+uint8 YAWRATE_RANGE_200DEG = 53 #0x35
+---
+int8 result
+int8 RESULT_FAIL = -1
+int8 RESULT_DONE = 0

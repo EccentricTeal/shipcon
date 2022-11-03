@@ -9,7 +9,7 @@ namespace shipcon
   {
     pnh_.getParam( "IpAddr", ip_addr_ );
     pnh_.getParam( "Port", port_ );
-    pnh_.param<std::string>( "SubnameControlval", subname_ctrlval_, "controlval_motor" );
+    pnh_.param<std::string>( "SubnameControlVal", subname_ctrlval_, "controlval_motor" );
     initEthernet();
 
     pub_motor_info_ = pnh_.advertise<shipcon::motor_info>( "status", 1 );

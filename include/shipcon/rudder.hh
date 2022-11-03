@@ -64,7 +64,7 @@ namespace shipcon
 
     /** Callback **/
     private:
-      void subcallback_ctrl_value( const std_msgs::Int16 value );
+      void subcallback_ctrl_value( std_msgs::Int16::ConstPtr value );
 
     /** Thread **/
     private:

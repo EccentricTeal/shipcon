@@ -33,9 +33,18 @@ catkin_python_setup()
    rudder_info.msg
    rudder_vectwin_mode.msg
 )
- generate_messages(
-   DEPENDENCIES
-   std_msgs
+
+add_service_files(FILES
+  Jg35fdCalibrateBiasDrift.srv
+  Jg35fdControlCalculate.srv
+  Jg35fdControlOutput.srv
+  Jg35fdResetAngle.srv
+  Jg35fdSetAnalogMode.srv
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
 )
 
 catkin_package(
@@ -99,14 +108,36 @@ target_link_libraries(gyro ${catkin_LIBRARIES})
 add_dependencies(gyro shipcon_generate_messages_cpp)
 
 
+add_executable(gyro_jae_jg35fd
+  src/class/gyro_jae_jg35fd.cc
+  src/node/gyro_jae_jg35fd_node.cc
+  src/class/angle_converter.cc
+  src/class/serialcom.cc
+)
+target_link_libraries(gyro_jae_jg35fd
+  ${catkin_LIBRARIES}
+)
+add_dependencies(gyro_jae_jg35fd
+  shipcon_generate_messages_cpp
+)
+
+
 add_executable(gps_csv_converter src/gps_csv_converter.cpp)
 target_link_libraries(gps_csv_converter ${catkin_LIBRARIES})
 add_dependencies(gps_csv_converter shipcon_generate_messages_cpp)
 
 
-add_executable(main_control src/main_control.cpp)
-target_link_libraries(main_control ${catkin_LIBRARIES})
-add_dependencies(main_control shipcon_generate_messages_cpp)
+add_executable(ztest_controller
+  src/class/ztest_controller.cc
+  src/node/ztest_controller_node.cc
+  src/class/angle_converter.cc
+)
+target_link_libraries(ztest_controller
+  ${catkin_LIBRARIES}
+)
+add_dependencies(ztest_controller
+  shipcon_generate_messages_cpp
+)
 
 
 add_executable(logger src/logger.cpp)
