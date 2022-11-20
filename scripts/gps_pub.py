@@ -16,7 +16,7 @@ from shipcon.msg import gps_time
 
 #Constants-----------------------------------------------------------------------------------------
 PUBLISH_RATE = 10 #Hz
-SERIAL_PORT = "/dev/ttyUSB1"
+SERIAL_PORT = "/dev/ttyUSB2"
 BAUD_RATE = 19200
 
 #Class-----------------------------------------------------------------------------------------

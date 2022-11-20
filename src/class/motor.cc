@@ -94,13 +94,13 @@ namespace shipcon
     throttle = static_cast<int16_t>( msg->target_rpm * 100.0 / MAX_MOTOR_RPM );
     if( throttle > 100 ){ throttle = 100; }
     if( throttle < -100 ){ throttle = -100; }
-    pitch = static_cast<int16_t>( rad2deg( msg->target_pitch_rad ) * 100.0 / MAX_MOTOR_RPM );
-    if( pitch > 100 ){ pitch = 100; }
-    if( pitch < -100 ){ pitch = -100; }
+    pitch = static_cast<int16_t>( rad2deg( msg->target_pitch_rad ) );
+    if( pitch > 20 ){ pitch = 20; }
+    if( pitch < -20 ){ pitch = -20; }
 
     /** Buffer set **/
-    memcpy( &throttle, &buffer[0], 2 );
-    memcpy( &pitch, &buffer[2], 2 );
+    memcpy( &buffer[0], &throttle, 2 );
+    memcpy( &buffer[2], &pitch, 2 );
 
     /** Send UDP **/
     int send_size = sendUdp( SELF_PORT, ip_addr_, buffer, sizeof(buffer) );

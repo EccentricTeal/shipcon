@@ -28,8 +28,8 @@ namespace shipcon
 
   void ZtestNode::initPublisher( void )
   {
-    pub_motor_ = pnh_.advertise<std_msgs::Int16>( "motor_command", 1 );
-    pub_rudder_ = pnh_.advertise<std_msgs::Int16>( "rudder_command", 1 );
+    pub_motor_ = pnh_.advertise<shipcon::motor_control>( "motor_command", 1 );
+    pub_rudder_ = pnh_.advertise<shipcon::rudder_control>( "rudder_command", 1 );
   }
 
 
@@ -51,8 +51,7 @@ namespace shipcon
 
   void ZtestNode::initTest( void )
   {
-    target_motor_power_percent_ = MOTOR_POWER_PERCENT;
-    target_rudder_angle_percent_ = 0.0;
+    target_rudder_angle_rad_ = 0.0;
     turn_mode_.mode = TurnDirection::TURN_STBD;
     resetGyro();
   }
@@ -77,11 +76,12 @@ namespace shipcon
   {
     if( isAutomode_ )
     {
-      target_motor_power_percent_ = MOTOR_POWER_PERCENT;
+      target_motor_rpm_ = MOTOR_POWER_RPM;
+      target_propeller_pitch_deg_ = PROPELLER_PITCH_DEG;
     }
     else
     {
-      target_motor_power_percent_ = 0.0;
+      target_motor_rpm_ = 0.0;
     }
   }
 
@@ -94,41 +94,44 @@ namespace shipcon
       {
         if( current_yaw_rad_ > unitcon::angle::deg2rad( THREASHOLD_HEADING_DEG ) )
         {
-          target_rudder_angle_percent_ = TARGET_RUDDER_ANGLE_DEG / RUDDER_MAX_ANGLE_DEG;
+          target_rudder_angle_rad_ = unitcon::angle::deg2rad( -TARGET_RUDDER_ANGLE_DEG );
           turn_mode_.mode = TurnDirection::TURN_PORT;
         }
         else
         {
-          target_rudder_angle_percent_ = -TARGET_RUDDER_ANGLE_DEG / RUDDER_MAX_ANGLE_DEG;
+          target_rudder_angle_rad_ = unitcon::angle::deg2rad( TARGET_RUDDER_ANGLE_DEG );
         }
       }
       else
       {
-        if( current_yaw_rad_ < unitcon::angle::deg2rad( -THREASHOLD_HEADING_DEG ) )
+        if( current_yaw_rad_ < unitcon::angle::deg2rad( 360.0-THREASHOLD_HEADING_DEG ) )
         {
-          target_rudder_angle_percent_ = -TARGET_RUDDER_ANGLE_DEG / RUDDER_MAX_ANGLE_DEG;
+          target_rudder_angle_rad_ = unitcon::angle::deg2rad( TARGET_RUDDER_ANGLE_DEG );
           turn_mode_.mode = TurnDirection::TURN_STBD;
         }
         else
         {
-          target_rudder_angle_percent_ = TARGET_RUDDER_ANGLE_DEG / RUDDER_MAX_ANGLE_DEG;
+          target_rudder_angle_rad_ = unitcon::angle::deg2rad( -TARGET_RUDDER_ANGLE_DEG );
         }
       }
     }
     else
     {
-      target_rudder_angle_percent_ = 0.0;
+      target_rudder_angle_rad_ = 0.0;
     }
   }
 
 
   void ZtestNode::publishTopics( void )
   {
-    std_msgs::Int16 msg_motor;
-    std_msgs::Int16 msg_rudder;
+    shipcon::motor_control msg_motor;
+    shipcon::rudder_control msg_rudder;
 
-    msg_motor.data = static_cast<int16_t>( target_motor_power_percent_ );
-    msg_rudder.data = static_cast<int16_t>( target_rudder_angle_percent_ * 100.0 );
+    msg_motor.target_rpm = target_motor_rpm_;
+    msg_motor.target_pitch_rad = unitcon::angle::deg2rad( target_propeller_pitch_deg_ );
+    msg_rudder.target_angle_rad.clear();
+    msg_rudder.target_angle_rad.push_back( static_cast<float>( target_rudder_angle_rad_ ) );
+    msg_rudder.target_angle_rad.push_back( static_cast<float>( target_rudder_angle_rad_ ) );
 
     pub_motor_.publish( msg_motor );
     pub_rudder_.publish( msg_rudder );
@@ -160,10 +163,13 @@ namespace shipcon
 
   void ZtestNode::subcallback_radio_control(std_msgs::Int16::ConstPtr msg )
   {
-    if( msg->data == 1 && isAutomode_ == false )
+    if( msg->data == 1 )
     {
-      initTest();
-      isAutomode_ = true;
+      if( isAutomode_ == false )
+      {
+        initTest();
+        isAutomode_ = true;
+      }
     }
     else
     {

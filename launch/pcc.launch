@@ -12,10 +12,10 @@
 		<param name="SubnameControlVal" value="/Autonode/Subname/BowThruster" />
 	</node>
 
-	<node pkg="shipcon" name="rudder" type="single_rudder">
+	<node pkg="shipcon" name="rudder" type="twin_rudder">
 		<param name="IpAddr" value="192.168.39.11" />
 		<param name="Port" value="50002" />
-		<param name="SubnameControlVal" value="/pcc/ztest_controller/rudder_command" />		
+		<param name="SubnameControlVal" value="/pcc/ztest_controller/rudder_command" />
 	</node>
 
 	<node pkg="shipcon" name="radio_control" type="radio_control">
@@ -26,13 +26,14 @@
 	<node pkg="shipcon" name="ztest_controller" type="ztest_controller">
 		<param name="SubnameGyro" value="/pcc/gyro/gyro" />
 		<param name="SubnameRadioControl" value="/pcc/radio_control/mode_value" />
+		<param name="SrvnameGyroResetAngle" value ="/srv/reset_angle" />
 	</node>
 
 	<node pkg="shipcon" name="gyro" type="gyro_jae_jg35fd" output="screen">
-		<param name="serial/port_name" value="/dev/ttyUSB0" />
+		<param name="serial/port_name" value="/dev/ttyUSB1" />
 	</node>
 
-	<node pkg="shipcon" name="gps" type="gps_pub.py" />
+	<node pkg="shipcon" name="gps" type="gps_mid.py" />
 	
   </group>
 </launch>

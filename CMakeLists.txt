@@ -93,6 +93,15 @@ target_link_libraries(single_rudder ${catkin_LIBRARIES})
 add_dependencies(single_rudder shipcon_generate_messages_cpp)
 
 
+add_executable(twin_rudder
+  src/class/twin_rudder.cc
+  src/node/twin_rudder_node.cc
+  src/class/angle_converter.cc
+)
+target_link_libraries(twin_rudder ${catkin_LIBRARIES})
+add_dependencies(twin_rudder shipcon_generate_messages_cpp)
+
+
 add_executable(radio_control
   src/class/radio_control.cc
   src/node/radio_control_node.cc
@@ -155,9 +164,10 @@ add_dependencies(logger shipcon_generate_messages_cpp)
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(
-  PROGRAMS scripts/gps_pub.py
+  PROGRAMS scripts/gps_mid.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
+
 
 
 
@@ -182,6 +192,10 @@ catkin_install_python(
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
  )
 
+ catkin_install_python(
+  PROGRAMS scripts/gps_mid.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
 
 #############
 ## Testing ##

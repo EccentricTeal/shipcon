@@ -70,7 +70,7 @@ namespace shipcon
 
   void RadioControlNode::thread_update( void )
   {
-    char in_buf[10];
+    char in_buf[16];
     struct sockaddr_in addr_src;
     const int addr_src_len = sizeof( sockaddr_in );
 
@@ -94,10 +94,10 @@ namespace shipcon
       {
         std::lock_guard<std::mutex> lock( mtx_ );
         memcpy( &(msg_motor_.data), &in_buf[0], 2 );
-        memcpy( &(msg_prop_pitch_.data), &in_buf[0], 2 );
+        memcpy( &(msg_prop_pitch_.data), &in_buf[14], 2 );
         memcpy( &(msg_rudder_.data),&in_buf[2], 2 );
-        msg_mode_.data = in_buf[4];
-        msg_gyro_reset_.data = in_buf[6];
+        msg_mode_.data = in_buf[8];
+        msg_gyro_reset_.data = in_buf[10];
         msg_error_.level = msg_error_.OK;
       }
     }

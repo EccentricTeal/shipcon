@@ -5,6 +5,8 @@
 #include "diagnostic_msgs/DiagnosticStatus.h"
 #include "shipcon/motor_control.h"
 #include "shipcon/motor_info.h"
+#include "shipcon/rudder_control.h"
+#include "shipcon/rudder_info.h"
 #include "std_msgs/Float32.h"/*Rudder Angle*/
 #include "std_msgs/Int16.h"/*Thruster,RC*/
 #include "shipcon/gyro.h" /*Gyro*/
@@ -27,7 +29,8 @@ namespace shipcon
   {
     /* Constants */
     private:
-      const double MOTOR_POWER_PERCENT = 40.0;
+      const double MOTOR_POWER_RPM = 1100.0;
+      const double PROPELLER_PITCH_DEG = 30.0;
       const double RUDDER_MAX_ANGLE_DEG = 30.0;
       const double TARGET_RUDDER_ANGLE_DEG = 20.0;
       const double THREASHOLD_HEADING_DEG = 20.0;
@@ -48,8 +51,9 @@ namespace shipcon
       TurnDirection turn_mode_;
       double current_yaw_rad_;
       bool isAutomode_;
-      double target_motor_power_percent_;
-      double target_rudder_angle_percent_;
+      double target_motor_rpm_;
+      double target_propeller_pitch_deg_;
+      double target_rudder_angle_rad_;
     
     /* Constructors */
     public:

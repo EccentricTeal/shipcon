@@ -5,6 +5,9 @@
 #include "std_msgs/Int16.h"
 #include "std_msgs/Float32.h"
 #include "diagnostic_msgs/DiagnosticStatus.h"
+#include "shipcon/rudder_control.h"
+#include "shipcon/rudder_info.h"
+#include "shipcon/angle_converter.hh"
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -21,6 +24,7 @@ namespace shipcon
   {
     /** Constants **/
     private:
+      const int SELF_PORT = 50000;
       
     /** Member Objects **/
     private:
@@ -65,6 +69,62 @@ namespace shipcon
     /** Callback **/
     private:
       void subcallback_ctrl_value( std_msgs::Int16::ConstPtr value );
+
+    /** Thread **/
+    private:
+      void thread_publishRudderInfo( void );
+      void thread_updateValue( void );
+  };
+
+    class TwinRudderNode
+  {
+    /** Constants **/
+    private:
+      const int SELF_PORT = 50000;
+      
+    /** Member Objects **/
+    private:
+      //Thread
+      std::mutex mtx_;
+
+      //Socket Com
+      int sock_;
+      struct sockaddr_in addr_;
+      std::string ip_addr_;
+      int port_;
+
+      //ROS
+      ros::NodeHandle nh_, pnh_;
+      ros::Publisher pub_status_; 
+      ros::Publisher pub_error_;
+      ros::Subscriber sub_ctrlval_;
+      std::string subname_ctrlval_;
+
+      diagnostic_msgs::DiagnosticStatus msg_error_;
+      shipcon::rudder_control ctrl_value_msg_;
+      shipcon::rudder_info angle_msg_;
+
+      //Thread
+      std::unique_ptr<std::thread> threadptr_pub_;
+      std::unique_ptr<std::thread> threadptr_update_;
+
+    /** Constrctor, Destructor **/
+    public:
+      TwinRudderNode( ros::NodeHandle nh, ros::NodeHandle pnh );
+      ~TwinRudderNode();
+
+    /** Methods **/
+    public:
+      void run( void );
+
+    private:
+      void initEthernet( void );
+      int receiveUdp( std::string ip, char* data, const int data_length );
+      int sendUdp( int port, std::string ip, char* data, const int data_length );
+
+    /** Callback **/
+    private:
+      void subcallback_ctrl_value( shipcon::rudder_control::ConstPtr value );
 
     /** Thread **/
     private:
